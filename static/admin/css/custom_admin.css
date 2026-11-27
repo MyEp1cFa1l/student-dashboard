@@ -1,0 +1,35 @@
+/* Находим список чекбоксов внутри конкретного поля в админке */
+.field-tags ul {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr; /* Две колонки */
+    gap: 10px;
+    padding: 15px;
+    background: var(--body-bg, #fff);
+    border: 1px solid var(--hairline-color, #ccc);
+    border-radius: 4px;
+    list-style: none;
+    margin: 0;
+}
+
+/* Стилизуем каждую строку списка */
+.field-tags ul li {
+    display: flex;
+    align-items: center;
+}
+
+/* Отступ для самого чекбокса и выравнивание текста */
+.field-tags ul li label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+    margin: 0;
+}
+
+.field-tags ul li input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 0;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}

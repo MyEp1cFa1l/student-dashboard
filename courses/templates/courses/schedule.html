@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Мое расписание</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <!-- Проходимся по дням недели -->
+        {% for day in schedule_data %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h5 class="mb-0">{{ day.day_name }}</h5>
+                    </div>
+                    <div class="card-body bg-light">
+                        
+                        <!-- Проходимся по занятиям внутри этого дня -->
+                        {% for slot in day.slots %}
+                            <div class="card mb-3 border-0 shadow-sm">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge {% if slot.format == 'online' %}bg-info{% else %}bg-secondary{% endif %}">
+                                            {{ slot.get_format_display }}
+                                        </span>
+                                        <small class="fw-bold text-muted">
+                                            {{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}
+                                        </small>
+                                    </div>
+                                    <h6 class="card-title mb-1">{{ slot.course.title }}</h6>
+                                    
+                                    {% if slot.format == 'offline' and slot.classroom %}
+                                        <p class="card-text small text-muted mb-0">
+                                            📍 Аудитория: {{ slot.classroom }}
+                                        </p>
+                                    {% elif slot.format == 'online' and slot.online_link %}
+                                        <a href="{{ slot.online_link }}" target="_blank" class="btn btn-sm btn-outline-info mt-2 w-100">
+                                            Подключиться
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="text-center text-muted py-4">
+                                <p class="mb-0">Нет занятий</p>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">{% if form.instance.pk %}Редактировать курс{% else %}Добавить новый курс{% endif %}</h3>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Выводим все поля, КРОМЕ tags -->
+                        {% for field in form %}
+                            {% if field.name != 'tags' %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger small">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Рисуем теги красиво -->
+                        <div class="mb-4">
+                            <label class="form-label d-block">{{ form.tags.label }}</label>
+                            <div class="row">
+                                {% for checkbox in form.tags %}
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                            <a href="{% url 'courses:list' %}" class="btn btn-outline-secondary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

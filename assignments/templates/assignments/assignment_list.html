@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    
+    <!-- Шапка страницы с кнопками -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Мои задания</h2>
+        
+        <div>
+            <!-- Кнопка добавления (ссылка теперь ведет на твой url 'add') -->
+            <a href="{% url 'assignments:add' %}" class="btn btn-success me-2">
+                + Добавить задание
+            </a>
+            
+            <!-- Кнопка фильтра -->
+            <button id="toggle-done-btn" type="button" class="btn btn-primary">
+                Показать выполненные
+            </button>
+        </div>
+    </div>
+
+    <!-- Сетка с карточками -->
+    <div class="row" id="assignments-container">
+        {% for assignment in assignments %}
+            <!-- 
+              Если статус 'done', мы добавляем класс d-none (скрыть) и is-done (для JS).
+              Если статус другой - карточка видна сразу.
+            -->
+            <div class="col-md-6 mb-3 assignment-card {% if assignment.status == 'done' %}d-none is-done{% endif %}">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a href="{% url 'assignments:detail' assignment.pk %}" class="text-decoration-none">
+                                {{ assignment.title }}
+                            </a>
+                        </h5>
+                        <h6 class="card-subtitle mb-3 text-muted">{{ assignment.course.title }}</h6>
+                        
+                        <div class="mt-auto">
+                            <p class="mb-2">
+                                <strong>Статус:</strong> 
+                                {% if assignment.status == 'todo' %}
+                                    <span class="badge bg-danger">Не начато</span>
+                                {% elif assignment.status == 'doing' %}
+                                    <span class="badge bg-warning text-dark">В процессе</span>
+                                {% elif assignment.status == 'done' %}
+                                    <span class="badge bg-success">Выполнено</span>
+                                {% endif %}
+                            </p>
+                            
+                            <p class="mb-0 text-muted">
+                                <small>Дедлайн: {{ assignment.due_at|date:"d M Y, H:i" }}</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">У вас пока нет заданий. Самое время добавить первое!</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Скрипт фильтрации -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggle-done-btn');
+        const doneCards = document.querySelectorAll('.assignment-card.is-done');
+        
+        let isShowingDone = false;
+
+        toggleBtn.addEventListener('click', function() {
+            isShowingDone = !isShowingDone;
+
+            doneCards.forEach(function(card) {
+                if (isShowingDone) {
+                    card.classList.remove('d-none');
+                } else {
+                    card.classList.add('d-none');
+                }
+            });
+
+            // Меняем текст на кнопке
+            if (isShowingDone) {
+                toggleBtn.textContent = 'Скрыть выполненные';
+                toggleBtn.classList.replace('btn-primary', 'btn-secondary');
+            } else {
+                toggleBtn.textContent = 'Показать выполненные';
+                toggleBtn.classList.replace('btn-secondary', 'btn-primary');
+            }
+        });
+    });
+</script>
+{% endblock %}

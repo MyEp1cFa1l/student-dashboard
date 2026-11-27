@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Наши преподаватели</h2>
+    
+    <div class="row">
+        {% for teacher in teachers %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ teacher.full_name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ teacher.department }}</h6>
+                        
+                        {% if teacher.bio %}
+                            <p class="card-text mt-3">{{ teacher.bio|truncatechars:120 }}</p>
+                        {% endif %}
+                        
+                        <hr>
+                        <strong>Ведет курсы:</strong>
+                        <ul class="mb-0 mt-2">
+                            {% for course in teacher.course_set.all %}
+                                <li>{{ course.title }} ({{ course.semester }})</li>
+                            {% empty %}
+                                <li class="text-muted">Курсы пока не назначены</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">Преподаватели еще не добавлены в систему.</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
