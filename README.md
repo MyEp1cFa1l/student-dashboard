@@ -28,12 +28,12 @@
 
 2. **Создайте файл .env в корневой папке:**
 Вам нужно создать файл .env (он есть в .gitignore для безопасности) и добавить туда настройки базы данных:
-Пример содержимого .env
-  DEBUG=1
-  SECRET_KEY=ваш_секретный_ключ_django
-  POSTGRES_DB=students_db
-  POSTGRES_USER=students_user
-  POSTGRES_PASSWORD=students_password
+   Пример содержимого .env
+     DEBUG=1
+     SECRET_KEY=ваш_секретный_ключ_django
+     POSTGRES_DB=students_db
+     POSTGRES_USER=students_user
+     POSTGRES_PASSWORD=students_password
 
 3. **Соберите и запустите контейнеры:**
    docker compose up --build -d
